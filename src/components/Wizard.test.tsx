@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { WizardContextProvider } from "../hooks/WizardProvider";
 
 import { Wizard } from "./Wizard";
 
@@ -14,46 +13,37 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 const TestWizard = () => (
-  <WizardContextProvider>
   <Wizard
     steps={[
       {
         heading: "Welcome",
         identifier: "initial",
-        body: () => <>Boo</>,
+        body: () => <>Beep</>,
       },
       {
         heading: "Step 2",
         identifier: "second",
         stepType: "submission",
-        body: () => <>Boo</>,
+        body: () => <>Boop</>,
         onSubmit: async () => {
-          let res; 
-          setTimeout(() => res = "ok", 1000)
-          return await res 
-        }
+          let res;
+          setTimeout(() => (res = "ok"), 1000);
+          return await res;
+        },
       },
       {
         heading: "Step 3",
         identifier: "third",
         stepType: "final",
-        body: () => <>Boo</>,
+        body: () => <>Done</>,
       },
     ]}
   />
-</WizardContextProvider>
-)
-
+);
 
 test("it renders Wizard component", () => {
-  render(<TestWizard />)
-  const wizard = screen.getByText(/Boo/i);
+  render(<TestWizard />);
+  const wizard = screen.getByText(/Beep/i);
   expect(wizard).toBeInTheDocument();
-});
-
-test("it renders Wizard component", () => {
-  render(<TestWizard />)
-  const next = screen.getByText(/Next/i);
-  expect(next).toBeInTheDocument();
 });
 

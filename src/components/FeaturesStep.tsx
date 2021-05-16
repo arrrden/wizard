@@ -1,7 +1,6 @@
 import { useState, Suspense, useEffect } from "react";
 import { Row, Form, Col, Typography, Skeleton, Space, Checkbox, Divider } from "antd";
-
-import { useWizardContext } from "../hooks/WizardProvider";
+import { WizardEventArgs } from "../hooks/useWizard";
 
 const { Text, Title } = Typography;
 
@@ -11,10 +10,8 @@ type Feature = {
   description: string;
 };
 
-export const FeaturesStep = (props: any) => {
-  const {
-    wizardState: [state],
-  } = useWizardContext();
+export const FeaturesStep = (props: Omit<WizardEventArgs, "fn" | "formValues">) => {
+  const { state } = props;
   const [featureList, setFeatureList] = useState<Feature[]>(() => []);
 
   const getFeatures = async () => {
@@ -28,7 +25,6 @@ export const FeaturesStep = (props: any) => {
     }
     if (res.ok) {
       const data = await res.json();
-      console.log(res, { data });
       setFeatureList(data);
     }
   };
@@ -40,7 +36,7 @@ export const FeaturesStep = (props: any) => {
   return (
     <Col xs={24}>
       <Row gutter={[16, 16]}>
-        <Title level={4}>
+        <Title level={4} style={{wordBreak: "break-all"}}>
           Hey {state.name} {(state.name as string).length > 30 ? "...long name, huhh?" : null} ✨
         </Title>
         <Text>Please let us know which of WIZRD™'s magical features you're interested in learning below.</Text>

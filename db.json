@@ -2,97 +2,55 @@
   "users": [
     {
       "id": 1,
-      "name": "Booperino",
-      "description": "This is the description for Booperino",
+      "name": "Arden",
+      "description": "Beep beep boop boop",
       "features": []
     },
     {
-      "name": "beep",
-      "boop": "boop",
-      "features": [
+      "id": 2,
+      "name": "Mark Hughes",
+      "description": "tired of tech, want to be WIZRD",
+      "feature": [
         1,
         2,
-        3
-      ],
-      "id": 2
+        4
+      ]
     },
     {
-      "name": "beep",
-      "description": "boop",
+      "name": "Boo",
+      "description": "sldgsl",
       "features": [
         1,
-        3,
-        4
+        3
       ],
       "id": 3
-    },
-    {
-      "name": "beep",
-      "boop": "boop",
-      "features": [
-        1,
-        2,
-        3
-      ],
-      "id": 4
-    },
-    {
-      "name": "booop",
-      "description": "poop",
-      "features": [
-        1,
-        3,
-        4
-      ],
-      "id": 5
-    },
-    {
-      "name": "hi",
-      "features": [
-        2,
-        4
-      ],
-      "id": 6
-    },
-    {
-      "name": "hello",
-      "description": "sdjh",
-      "features": [
-        2,
-        3
-      ],
-      "id": 7
-    },
-    {
-      "name": "Howdy nerds",
-      "description": "boop",
-      "features": [
-        1,
-        4
-      ],
-      "id": 8
     }
   ],
   "features": [
     {
       "id": 1,
-      "name": "flight",
-      "description": "The ability to fly"
+      "name": "Flight",
+      "description": "The ability to fly. Maybe on a broomstick, maybe not"
     },
     {
       "id": 2,
-      "name": "lasers",
-      "description": "Shoot lasers idk"
+      "name": "Conjuring",
+      "description": "Whip up a sandwich out of thin air"
     },
     {
       "id": 3,
-      "name": "Something real cool",
-      "description": "lorem impsum or sumthin sumthin"
+      "name": "Necromancy",
+      "description": "If you're that way inclined"
     },
     {
       "id": 4,
-      "name": "Something else real cool",
-      "description": "lorem impsum or sumthin sumthin"
+      "name": "Divination",
+      "description": "Be in the know about what happens after you become a WIZRD"
+    },
+    {
+      "id": 5,
+      "name": "Transmutation",
+      "description": "'everything I touch turns to gold, this is horrible' - Midas"
     }
   ]
 }

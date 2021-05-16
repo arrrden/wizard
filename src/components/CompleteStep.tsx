@@ -1,8 +1,6 @@
 import { Row, Col, Typography, Divider, Alert } from "antd";
 
-
-
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 
 export const CompleteStep = () => {

@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useWizardContext, WizardNavReducerActionType } from "./WizardProvider";
-
 export interface Navigation {
   readonly next: () => void;
   readonly previous: () => void;
@@ -8,15 +6,23 @@ export interface Navigation {
   readonly submit?: <T>(arg: T) => T;
 }
 
+export type State = Record<string, unknown>;
+
+export type WizardEventArgs = {
+  state: State;
+  navigation: Navigation;
+  formValues?: any;
+  fn: { updateState: (arg: object) => void };
+};
+
 export type WizardStep = {
   identifier: string;
   heading?: string;
-  body: (props: any) => JSX.Element;
+  body: (props: Omit<WizardEventArgs, "fn" | "formValues">) => JSX.Element;
   stepType?: "initial" | "final" | "submission";
-  onExit?: (arg?: any) => Promise<"ok" | undefined> | ((arg?: any) => "ok" | undefined);
-  onEnter?: (arg?: any) => Promise<"ok" | undefined> | ((arg?: any) => "ok" | undefined);
-  // NOTE: really just sugar to make it explicit that this shouldn't just be an exit event
-  onSubmit?: (arg?: any) => Promise<"ok" | undefined> | ((arg?: any) => "ok" | undefined);
+  onEnter?: (arg: WizardEventArgs) => Promise<"ok" | undefined> | ("ok" | undefined); // NOTE: unused, but here for completeness
+  onExit?: (arg: WizardEventArgs) => Promise<"ok" | undefined> | ("ok" | undefined);
+  onSubmit?: (arg: Omit<WizardEventArgs, "fn">) => Promise<"ok" | undefined> | ("ok" | undefined);
 };
 
 export const useWizard = (
@@ -24,19 +30,16 @@ export const useWizard = (
 ): {
   navigation: Navigation;
   step: WizardStep;
+  stepIndex: number;
   nextStep: WizardStep | null;
   progress: number;
-  isSubmitting: boolean;
 } => {
   const [wizardStep, setWizardStep] = useState<WizardStep>(() => steps[0]);
   const [stepIndex, setStepIndex] = useState<number>(() =>
     steps.findIndex((step) => step.identifier === wizardStep.identifier)
   );
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(() => false);
+  const nextWizardStep = stepIndex !== steps.length - 1 ? steps[stepIndex + 1] : null;
 
-  const nextWizardStep = stepIndex + 1 < steps.length ? steps[stepIndex + 1] : null;
-
-  // NOTE: this could be swapped for a reducer
   const handleUpdateWizardStep = useCallback(
     (stepIndex) => {
       setWizardStep(steps[stepIndex]);
@@ -74,23 +77,11 @@ export const useWizard = (
     },
   };
 
-  // NOTE: this could be handled better: we have to register navigation with the context if we
-  // want to call it from within the step components.
-  const { wizardNavigation: nav } = useWizardContext();
-
-  useEffect(() => {
-    const [_, dispatch] = nav;
-    dispatch({
-      type: WizardNavReducerActionType.INIT,
-      payload: navigation,
-    });
-  }, []);
-
   return {
     step: wizardStep,
+    stepIndex,
     nextStep: nextWizardStep,
     progress,
-    isSubmitting,
     navigation,
   };
 };

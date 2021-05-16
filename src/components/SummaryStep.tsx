@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Row, Col, Typography, Tag, Card, Button, Checkbox, Popover, Space, Empty, Divider, Alert } from "antd";
-
-import { useWizardContext } from "../hooks/WizardProvider";
+import { Row, Col, Typography, Tag, Card, Button, Checkbox, Popover, Space, Empty, Divider } from "antd";
+import { WizardEventArgs } from "../hooks/useWizard";
 
 const { Title, Text } = Typography;
 
@@ -11,11 +10,8 @@ type Feature = {
   description: string;
 };
 
-export const SummaryStep = () => {
-  const {
-    wizardNavigation: [navigate],
-    wizardState: [state],
-  } = useWizardContext();
+export const SummaryStep = (props: Omit<WizardEventArgs, "fn" | "formValues">) => {
+  const { state, navigation } = props;
   const [featureList, setFeatureList] = useState<Feature[]>(() => []);
 
   const getFeatures = async () => {
@@ -51,7 +47,7 @@ export const SummaryStep = () => {
         <Card
           type="inner"
           title="Name & Description"
-          extra={<Button onClick={() => navigate.jumpTo("initial")}>Edit</Button>}
+          extra={<Button onClick={() => navigation.jumpTo("initial")}>Edit</Button>}
           style={{ width: "100%", margin: "12px 0", borderRadius: "8px" }}
         >
           <Row gutter={[16, 16]}>
@@ -70,13 +66,13 @@ export const SummaryStep = () => {
         <Card
           type="inner"
           title="Wizard powers"
-          extra={<Button onClick={() => navigate.jumpTo("features")}>Edit</Button>}
+          extra={<Button onClick={() => navigation.jumpTo("features")}>Edit</Button>}
           style={{ width: "100%", margin: "12px 0", borderRadius: "8px" }}
         >
-          <Checkbox.Group>
-            <Row gutter={[24, 24]}>
+          <Checkbox.Group style={{ width: "100%" }}>
+            <Row gutter={[24, 24]} justify="center">
               {Array.isArray(state.features) && state.features.length > 0 ? (
-                <Space>
+                <Space wrap>
                   {featureList
                     .filter((feature: Feature) => (state.features as number[]).includes(feature.id))
                     .map((feature: Feature, index: number) => {
@@ -99,10 +95,10 @@ export const SummaryStep = () => {
                       ];
 
                       return (
-                        <Popover placement="topLeft" content={content} title={`${feature.name} description`}>
+                        <Popover key={index} placement="topLeft" content={content} title={`${feature.name} description`}>
                           <Tag
-                            color={wizColorArray[Math.round(Math.random() * (wizColorArray.length - 1))]}
-                            icon={<>{wizArray[Math.round(Math.random() * (wizArray.length - 1))]}</>}
+                            color={wizColorArray[Math.floor(Math.random() * (wizColorArray.length - 1))]}
+                            icon={<>{wizArray[Math.floor(Math.random() * (wizArray.length - 1))]}</>}
                             style={{ padding: "8px", borderRadius: "12px" }}
                             key={feature.id}
                           >
@@ -113,13 +109,11 @@ export const SummaryStep = () => {
                     })}
                 </Space>
               ) : (
-                  <Row justify="center" align="middle">
                 <Col span={12}>
                   <Row justify="center" align="middle">
-                    <Empty />
+                    <Empty description="You haven't selected any features, but that's ok..." />
                   </Row>
                 </Col>
-                  </Row>
               )}
             </Row>
           </Checkbox.Group>
