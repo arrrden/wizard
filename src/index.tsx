@@ -5,9 +5,13 @@ import reportWebVitals from "./reportWebVitals";
 
 import "antd/dist/antd.css";
 
+import { WizardContextProvider } from "./hooks/WizardProvider";
+
 ReactDOM.render(
   <React.StrictMode>
+    <WizardContextProvider>
     <App />
+    </WizardContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
