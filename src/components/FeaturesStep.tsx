@@ -1,42 +1,21 @@
-import { useState, Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { Row, Form, Col, Typography, Skeleton, Space, Checkbox, Divider } from "antd";
+
 import { WizardEventArgs } from "../hooks/useWizard";
+import { useWizardFeaturesContext, WizardFeaturesContext } from "../hooks/featuresProvider";
+
+import { Feature } from "../types/wizardWizardTypes";
 
 const { Text, Title } = Typography;
 
-type Feature = {
-  id: number;
-  name: string;
-  description: string;
-};
-
 export const FeaturesStep = (props: Omit<WizardEventArgs, "fn" | "formValues">) => {
   const { state } = props;
-  const [featureList, setFeatureList] = useState<Feature[]>(() => []);
-
-  const getFeatures = async () => {
-    let res: Response;
-    try {
-      res = await fetch(`http://127.0.0.1:3001/features`, {
-        method: "GET",
-      });
-    } catch (e) {
-      throw new Error(`Failed to fetch magical features data. Try again?`);
-    }
-    if (res.ok) {
-      const data = await res.json();
-      setFeatureList(data);
-    }
-  };
-
-  useEffect(() => {
-    getFeatures();
-  }, []);
+  const { featureList } = useWizardFeaturesContext() as WizardFeaturesContext;
 
   return (
     <Col xs={24}>
       <Row gutter={[16, 16]}>
-        <Title level={4} style={{wordBreak: "break-all"}}>
+        <Title level={4} style={{ wordBreak: "break-all" }}>
           Hey {state.name} {(state.name as string).length > 30 ? "...long name, huhh?" : null} ✨
         </Title>
         <Text>Please let us know which of WIZRD™'s magical features you're interested in learning below.</Text>

@@ -1,37 +1,16 @@
-import { useState, useEffect } from "react";
-import { Row, Col, Typography, Tag, Card, Button, Checkbox, Popover, Space, Empty, Divider } from "antd";
+import { Row, Col, Typography, Tag, Card, Button, Checkbox, Popover, Space, Empty, Divider, Skeleton } from "antd";
+
 import { WizardEventArgs } from "../hooks/useWizard";
+import { useWizardFeaturesContext, WizardFeaturesContext } from "../hooks/featuresProvider";
+
+import { Feature } from "../types/wizardWizardTypes";
+import { Suspense } from "react";
 
 const { Title, Text } = Typography;
 
-type Feature = {
-  id: number;
-  name: string;
-  description: string;
-};
-
 export const SummaryStep = (props: Omit<WizardEventArgs, "fn" | "formValues">) => {
   const { state, navigation } = props;
-  const [featureList, setFeatureList] = useState<Feature[]>(() => []);
-
-  const getFeatures = async () => {
-    let res: Response;
-    try {
-      res = await fetch(`http://127.0.0.1:3001/features`, {
-        method: "GET",
-      });
-    } catch (e) {
-      throw new Error(`Failed to fetch magical features data. Try again?`);
-    }
-    if (res.ok) {
-      const data = await res.json();
-      setFeatureList(data);
-    }
-  };
-
-  useEffect(() => {
-    getFeatures();
-  }, []);
+  const { featureList } = useWizardFeaturesContext() as WizardFeaturesContext;
 
   return (
     <Col xs={24}>
@@ -73,40 +52,54 @@ export const SummaryStep = (props: Omit<WizardEventArgs, "fn" | "formValues">) =
             <Row gutter={[24, 24]} justify="center">
               {Array.isArray(state.features) && state.features.length > 0 ? (
                 <Space wrap>
-                  {featureList
-                    .filter((feature: Feature) => (state.features as number[]).includes(feature.id))
-                    .map((feature: Feature, index: number) => {
-                      const content = <Text type="secondary">{feature.description}</Text>;
+                  <Suspense
+                    fallback={
+                      <Space>
+                        <Skeleton.Button active size="large" shape="round" />
+                        <Skeleton.Button active size="large" shape="round" />
+                      </Space>
+                    }
+                  >
+                    {featureList
+                      .filter((feature: Feature) => (state.features as number[]).includes(feature.id))
+                      .map((feature: Feature, index: number) => {
+                        const content = <Text type="secondary">{feature.description}</Text>;
 
-                      // NOTE: largely just taking the opportunity to be a little silly.
-                      const wizArray = ["🪄", "🧚🏻", "🧞", "🧙‍♂️", "🧪", "🧙🏻‍♀️", "🧙🏿", "🧙🏽‍♂️", "✨"];
-                      const wizColorArray = [
-                        "magenta",
-                        "red",
-                        "volcano",
-                        "orange",
-                        "gold",
-                        "lime",
-                        "green",
-                        "cyan",
-                        "blue",
-                        "greekblue",
-                        "purple",
-                      ];
+                        // NOTE: largely just taking the opportunity to be a little silly.
+                        const wizArray = ["🪄", "🧚🏻", "🧞", "🧙‍♂️", "🧪", "🧙🏻‍♀️", "🧙🏿", "🧙🏽‍♂️", "✨"];
+                        const wizColorArray = [
+                          "magenta",
+                          "red",
+                          "volcano",
+                          "orange",
+                          "gold",
+                          "lime",
+                          "green",
+                          "cyan",
+                          "blue",
+                          "greekblue",
+                          "purple",
+                        ];
 
-                      return (
-                        <Popover key={index} placement="topLeft" content={content} title={`${feature.name} description`}>
-                          <Tag
-                            color={wizColorArray[Math.floor(Math.random() * (wizColorArray.length - 1))]}
-                            icon={<>{wizArray[Math.floor(Math.random() * (wizArray.length - 1))]}</>}
-                            style={{ padding: "8px", borderRadius: "12px" }}
-                            key={feature.id}
+                        return (
+                          <Popover
+                            key={index}
+                            placement="topLeft"
+                            content={content}
+                            title={`${feature.name} description`}
                           >
-                            {feature.name}
-                          </Tag>
-                        </Popover>
-                      );
-                    })}
+                            <Tag
+                              color={wizColorArray[Math.floor(Math.random() * (wizColorArray.length - 1))]}
+                              icon={<>{wizArray[Math.floor(Math.random() * (wizArray.length - 1))]}</>}
+                              style={{ padding: "8px", borderRadius: "12px" }}
+                              key={feature.id}
+                            >
+                              {feature.name}
+                            </Tag>
+                          </Popover>
+                        );
+                      })}
+                  </Suspense>
                 </Space>
               ) : (
                 <Col span={12}>

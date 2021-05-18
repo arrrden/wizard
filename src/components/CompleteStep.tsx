@@ -2,7 +2,6 @@ import { Row, Col, Typography, Divider, Alert } from "antd";
 
 const { Title } = Typography;
 
-
 export const CompleteStep = () => {
   return (
     <Col xs={24}>

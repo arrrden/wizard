@@ -4,10 +4,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import "antd/dist/antd.css";
+import { WizardFeaturesProvider } from "./hooks/featuresProvider";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <WizardFeaturesProvider>
+      <App />
+    </WizardFeaturesProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

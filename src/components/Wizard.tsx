@@ -102,7 +102,7 @@ export const Wizard = (props: WizardProps) => {
     } catch (e) {
       dispatch({
         type: WizardReducerActionType.FAILED,
-        event: () => setErrorText(`Oops, that's not magic: ${e}`),
+        event: () => setErrorText(`Oops, that's not magic, ${e}`),
       });
     }
   };
