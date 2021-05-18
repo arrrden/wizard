@@ -34,7 +34,11 @@ export const useWizard = (
   nextStep: WizardStep | null;
   progress: number;
 } => {
-  const [wizardStep, setWizardStep] = useState<WizardStep>(() => steps[0]);
+  const [
+    { onEnter = (arg: any) => "ok", onExit = (arg: any) => "ok", onSubmit = (arg: any) => "ok", ...otherWizardBits },
+    setWizardStep,
+  ] = useState<WizardStep>(() => steps[0]);
+  const wizardStep = { onEnter, onExit, onSubmit, ...otherWizardBits };
   const [stepIndex, setStepIndex] = useState<number>(() =>
     steps.findIndex((step) => step.identifier === wizardStep.identifier)
   );
@@ -78,7 +82,7 @@ export const useWizard = (
   };
 
   return {
-    step: wizardStep,
+    step: wizardStep as WizardStep,
     stepIndex,
     nextStep: nextWizardStep,
     progress,

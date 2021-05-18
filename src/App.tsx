@@ -7,18 +7,12 @@ import { Wizard } from "./components/Wizard";
 import { FeaturesStep } from "./components/FeaturesStep";
 import { SummaryStep } from "./components/SummaryStep";
 import { CompleteStep } from "./components/CompleteStep";
-import React from "react";
 
-type GETResponseBody = {
-  id: number;
-  name: string;
-  description: string;
-  features: number[];
-};
+import { User } from "./types/wizardWizardTypes";
 
-type POSTRequestBody = GETResponseBody;
-
-type POSTResponseBody = POSTRequestBody & {
+export type GETResponseBody = User[];
+export type POSTRequestBody = User;
+export type POSTResponseBody = POSTRequestBody & {
   id: number;
 };
 
